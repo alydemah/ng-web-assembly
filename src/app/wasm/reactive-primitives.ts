@@ -394,20 +394,22 @@ export function throttledComputation<T>(
 
 type PipelineStep<T, U> = (input: T) => U;
 
+interface WasmPipelineBuilder<T> {
+  pipe<U>(step: PipelineStep<T, U>): WasmPipelineBuilder<U>;
+  execute(input: T): T;
+  toSignal(input: Signal<T>): Signal<T>;
+}
+
 /**
  * Create a processing pipeline for WASM computations
  */
-export function wasmPipeline<T>(engine: WasmSignalEngine) {
+export function wasmPipeline<T>(_engine: WasmSignalEngine): WasmPipelineBuilder<T> {
   const steps: Array<PipelineStep<unknown, unknown>> = [];
 
-  return {
-    pipe<U>(step: PipelineStep<T, U>) {
+  const builder: WasmPipelineBuilder<T> = {
+    pipe<U>(step: PipelineStep<T, U>): WasmPipelineBuilder<U> {
       steps.push(step as PipelineStep<unknown, unknown>);
-      return this as unknown as {
-        pipe: <V>(step: PipelineStep<U, V>) => typeof this;
-        execute: (input: T) => U;
-        toSignal: (input: Signal<T>) => Signal<U>;
-      };
+      return builder as unknown as WasmPipelineBuilder<U>;
     },
 
     execute(input: T): T {
@@ -428,6 +430,8 @@ export function wasmPipeline<T>(engine: WasmSignalEngine) {
       });
     },
   };
+
+  return builder;
 }
 
 // ============================================

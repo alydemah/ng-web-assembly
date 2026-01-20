@@ -3,24 +3,22 @@ import {
   inject,
   signal,
   computed,
-  effect,
   OnInit,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DecimalPipe, PercentPipe, AsyncPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import {
   WasmSignalEngine,
   WasmWorkerPool,
   WasmVector,
   WasmMatrix,
-  type WasmMetrics,
 } from '../../wasm';
 
 @Component({
   selector: 'app-wasm-demo',
   standalone: true,
-  imports: [FormsModule, DecimalPipe, PercentPipe, AsyncPipe],
+  imports: [FormsModule, DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wasm-demo">
@@ -65,18 +63,18 @@ import {
               </div>
               <div class="metric-card">
                 <span class="metric-label">Allocations</span>
-                <span class="metric-value">{{ metrics()?.totalAllocations ?? 0 }}</span>
+                <span class="metric-value">{{ metrics().totalAllocations }}</span>
               </div>
               <div class="metric-card">
                 <span class="metric-label">Compute Time</span>
                 <span class="metric-value">
-                  {{ metrics()?.totalComputeTimeMs ?? 0 | number : '1.2-2' }}ms
+                  {{ metrics().totalComputeTimeMs | number : '1.2-2' }}ms
                 </span>
               </div>
               <div class="metric-card">
                 <span class="metric-label">Peak Memory</span>
                 <span class="metric-value">
-                  {{ (metrics()?.peakMemoryUsage ?? 0) / 1024 | number : '1.0-0' }}KB
+                  {{ metrics().peakMemoryUsage / 1024 | number : '1.0-0' }}KB
                 </span>
               </div>
             </div>
