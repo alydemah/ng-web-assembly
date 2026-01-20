@@ -52,4 +52,5 @@ __screenshots__/
 Thumbs.db
 
 # Compiled WASM (generated from .wat files)
-*.wasm
+# Note: We include public/wasm/*.wasm for the demo to work out of the box
+# *.wasm

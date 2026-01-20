@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "yarn build:wasm && ng build",
+    "build:wasm": "wat2wasm public/wasm/computation.wat -o public/wasm/computation.wasm",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
